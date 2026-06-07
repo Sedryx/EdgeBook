@@ -1,0 +1,9 @@
+.git
+.venv
+node_modules
+dist
+src-tauri/target
+__pycache__
+*.pyc
+*.log
+data/*.db
