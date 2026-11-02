@@ -1,99 +1,51 @@
-# EdgeBook
+$# EdgeBook
 
-EdgeBook est un journal de trading desktop construit avec Tauri, React, Rust et SQLite.
+EdgeBook est un journal de trading desktop base sur Tauri, React et SQLite.
 
-L'application stocke les donnees localement sur la machine de l'utilisateur. Le PnL est calcule automatiquement par defaut, avec un mode broker manuel lorsque le PnL net fourni par le broker doit etre la reference officielle.
+L'application garde les trades en local sur la machine de l'utilisateur. Le PnL est calcule automatiquement par defaut, avec une option de PnL net manuel broker quand la donnee broker doit faire foi.
 
-## Fonctionnalites
+## Prerequis desktop
 
-- Journal de trades avec PnL automatique ou PnL broker manuel.
-- Balance de compte manuelle, mise a jour automatiquement avec les trades clotures.
-- Dashboard avec equity curve, repartition long/short, resultats, PnL par marche et stats avancees.
-- Fiche de trade avec strategie, tags, psychologie, erreur, notes et screenshot.
-- Collage de screenshot via `Ctrl+V` dans l'onglet Journal, avec fallback `Select image`.
-- Calendar avec PnL par jour.
-- Review automatique des pertes, overrides broker, screenshots manquants, erreurs et risques hors regles.
-- Export CSV et backup JSON.
-- Themes, densite, langue et devise personnalisables.
-- Risk rules: risque max par trade, perte max journaliere, trades max par jour, objectif mensuel.
-
-## Prerequis Arch Linux
+Installer les dependances systeme Tauri pour Arch Linux:
 
 ```bash
 sudo pacman -Syu
-sudo pacman -S --needed webkit2gtk-4.1 base-devel curl wget file openssl appmenu-gtk-module libappindicator-gtk3 librsvg xdotool nodejs npm
+sudo pacman -S --needed webkit2gtk-4.1 base-devel curl wget file openssl appmenu-gtk-module libappindicator-gtk3 librsvg xdotool
 ```
 
-Rust est requis pour Tauri:
+Installer Node.js et npm:
 
 ```bash
-rustc --version
-cargo --version
+sudo pacman -S nodejs npm
 ```
 
-## Installation
+Rust est aussi requis pour Tauri. Il est deja installe sur cette machine.
+
+## Lancer en developpement
 
 ```bash
 npm install
-```
-
-## Developpement
-
-```bash
 npm run desktop:dev
 ```
 
-## Checks et tests
-
-```bash
-npm run check
-npm run test
-```
-
-`npm run test` execute le build frontend puis les tests Rust.
-
-## Build installable
+## Generer une application installable
 
 ```bash
 npm run desktop:build
 ```
 
-Les bundles sont generes dans:
+Les fichiers generes seront dans:
 
 ```bash
 src-tauri/target/release/bundle/
 ```
 
-La configuration Linux actuelle genere `.deb` et `.rpm`.
+Selon l'OS, Tauri peut produire un installateur Windows, un `.AppImage`, un `.deb`, un `.rpm` ou un bundle macOS.
 
-Pour AppImage ou d'autres formats, modifier `src-tauri/tauri.conf.json` dans `bundle.targets`.
+## Modes de calcul PnL
 
-## Docker
-
-Le Dockerfile sert de build/CI Linux. Il ne lance pas une fenetre desktop interactive.
-
-```bash
-docker build -t edgebook-build .
-```
-
-Le build Docker execute:
-
-```bash
-npm ci
-npm run test
-npm run desktop:build
-```
-
-## Modes PnL
-
-- `automatic`: calcule le PnL brut, le PnL net, le resultat en R et le statut du trade avec prix, taille, direction et frais.
-- `manual_broker_pnl`: utilise le PnL net broker comme valeur officielle, puis recalcule le resultat en R, le statut et les statistiques.
-
-## Donnees locales
-
-La base SQLite desktop est stockee dans le dossier application de Tauri, pas dans `data/trading_journal.db`.
-
-Le fichier `data/trading_journal.db` appartient a l'ancien prototype Python/Streamlit.
+- `automatic`: calcule le PnL brut, le PnL net, le resultat en R et le statut du trade a partir des prix, de la taille, de la direction et des frais.
+- `manual_broker_pnl`: utilise le PnL net reel fourni par le broker comme reference officielle, puis recalcule le resultat en R, le statut, les statistiques et les graphiques.
 
 ## Ancien prototype Streamlit
 
@@ -105,3 +57,4 @@ streamlit run app.py
 ```
 
 Pour le produit final telechargeable, utiliser la version Tauri.
+$
